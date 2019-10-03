@@ -1,6 +1,18 @@
+
+
+const configResult = require('dotenv').config();
+
+if (configResult.error) {
+  throw configResult.error
+}
+
+console.log(process.env);
+
 module.exports = {
+  pathPrefix: `/gatsby-sanutf-demo`,
   siteMetadata: {
-    title: `Gatsby Default Starter`,
+    title: `Gatsby Consuming API`,
+    subtitle: `Welcome to dynamic interface`,
     description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
     author: `@gatsbyjs`,
   },
@@ -27,6 +39,29 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: `gatsby-source-wordpress`,
+      options: {
+         // your wordpress source
+         baseUrl: process.env.NODE_ENV === 'development' ? process.env.BASE_URL_DEV : process.env.BASE_URL_PROD,
+         protocol: `https`,
+          // is it hosted on wordpress.com, or self-hosted?
+        hostedWPCOM: false,
+        //  does your site use the Advanced Custom Fields Plugin?
+        useACF: true,
+        // what routes/endpoint needs to fetch
+        includedRoutes: [
+          "**/posts",
+          "**/pages",
+          "**/media",
+          "**/categories",
+          "**/tags",
+          "**/taxonomies",
+          "**/users",
+        ],
+        verboseOutput: true,
+      }
+    }
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
